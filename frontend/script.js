@@ -1,8 +1,64 @@
 const api = 'http://localhost:3001';
+let usuarioLogado = null;
+let token = null;
 
 function showSection(id) {
   document.querySelectorAll('.tela').forEach(s => s.style.display = 'none');
   document.getElementById(id).style.display = 'block';
+}
+
+function mostrarLogin() {
+  document.getElementById('loginBox').style.display = 'block';
+  document.getElementById('mainBox').style.display = 'none';
+}
+function mostrarSistema() {
+  document.getElementById('loginBox').style.display = 'none';
+  document.getElementById('mainBox').style.display = 'block';
+}
+
+// Login
+const formLogin = document.getElementById('formLogin');
+if (formLogin) {
+  formLogin.onsubmit = async e => {
+    e.preventDefault();
+    const form = e.target;
+    const res = await fetch(api + '/funcionarios/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nome: form.nome.value, senha: form.senha.value })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      usuarioLogado = { nome: data.nome, id: data.id };
+      token = data.token;
+      localStorage.setItem('token', token);
+      localStorage.setItem('usuario', JSON.stringify(usuarioLogado));
+      document.getElementById('userWelcome').textContent = `Bem-vindo, ${usuarioLogado.nome}`;
+      document.getElementById('funcionarioIdEntrada').value = usuarioLogado.id;
+      mostrarSistema();
+      carregarTudo();
+    } else {
+      document.getElementById('loginErro').textContent = data.erro || 'Falha no login.';
+    }
+  };
+}
+
+document.getElementById('logoutBtn').onclick = () => {
+  usuarioLogado = null;
+  token = null;
+  localStorage.removeItem('token');
+  localStorage.removeItem('usuario');
+  mostrarLogin();
+};
+
+function carregarTudo() {
+  carregarClientes();
+  carregarVeiculos();
+  carregarPecas();
+  carregarOrdens();
+  carregarFuncionarios();
+  carregarHistorico();
+  carregarAlertas();
 }
 
 // Clientes
@@ -155,7 +211,7 @@ document.getElementById('formFuncionario').onsubmit = async e => {
   await fetch(api + '/funcionarios', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ nome: form.nome.value })
+    body: JSON.stringify({ nome: form.nome.value, senha: form.senha.value })
   });
   form.reset();
   carregarFuncionarios();
@@ -200,7 +256,6 @@ async function mostrarDetalheOrdem(ordem) {
     <form id="formLancamentoPeca">
       <select name="pecaId" id="selectPecaLancamento" required></select>
       <input name="quantidade" placeholder="Qtd" type="number" required>
-      <input name="funcionarioId" placeholder="ID Funcionário" type="number" required>
       <button type="submit">Lançar Peça</button>
     </form>
     <ul id="listaPecasOrdem"></ul>`;
@@ -228,13 +283,15 @@ async function mostrarDetalheOrdem(ordem) {
   document.getElementById('formLancamentoPeca').onsubmit = async e => {
     e.preventDefault();
     const form = e.target;
+    // Usa o funcionário logado
+    const funcionarioId = usuarioLogado ? usuarioLogado.id : null;
     const resp = await fetch(api + `/ordens/${ordem.id}/pecas`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         pecaId: form.pecaId.value,
         quantidade: form.quantidade.value,
-        funcionarioId: form.funcionarioId.value
+        funcionarioId
       })
     });
     const data = await resp.json();
@@ -317,11 +374,43 @@ async function carregarAlertas() {
 
 // Inicialização
 document.addEventListener('DOMContentLoaded', () => {
-  carregarClientes();
-  carregarVeiculos();
-  carregarPecas();
-  carregarOrdens();
-  carregarFuncionarios();
-  carregarHistorico();
-  carregarAlertas();
+  token = localStorage.getItem('token');
+  const user = localStorage.getItem('usuario');
+  if (token && user) {
+    usuarioLogado = JSON.parse(user);
+    document.getElementById('userWelcome').textContent = `Bem-vindo, ${usuarioLogado.nome}`;
+    document.getElementById('funcionarioIdEntrada').value = usuarioLogado.id;
+    mostrarSistema();
+    carregarTudo();
+  } else {
+    mostrarLogin();
+  }
 });
+
+// Cadastro de funcionário na tela de login
+const showCadastroBtn = document.getElementById('showCadastroBtn');
+const formCadastroFuncionario = document.getElementById('formCadastroFuncionario');
+const cadastroMsg = document.getElementById('cadastroMsg');
+if (showCadastroBtn && formCadastroFuncionario) {
+  showCadastroBtn.onclick = () => {
+    formCadastroFuncionario.style.display = formCadastroFuncionario.style.display === 'none' ? 'block' : 'none';
+    cadastroMsg.textContent = '';
+  };
+  formCadastroFuncionario.onsubmit = async e => {
+    e.preventDefault();
+    const form = e.target;
+    const res = await fetch(api + '/funcionarios', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nome: form.nome.value, senha: form.senha.value })
+    });
+    if (res.ok) {
+      cadastroMsg.style.color = 'green';
+      cadastroMsg.textContent = 'Funcionário cadastrado! Agora faça login.';
+      form.reset();
+    } else {
+      cadastroMsg.style.color = 'red';
+      cadastroMsg.textContent = 'Erro ao cadastrar funcionário.';
+    }
+  };
+}

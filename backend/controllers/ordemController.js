@@ -5,7 +5,9 @@ export default {
     res.json(await OrdemServico.findAll({ include: [Cliente, Veiculo, Peca, Funcionario] }));
   },
   async criar(req, res) {
-    res.json(await OrdemServico.create(req.body));
+    const { descricao, ClienteId, VeiculoId, FuncionarioId } = req.body;
+    const ordem = await OrdemServico.create({ descricao, status: 'aberta', ClienteId, VeiculoId, FuncionarioId });
+    res.json(ordem);
   },
   async lancarPeca(req, res) {
     const { id } = req.params;

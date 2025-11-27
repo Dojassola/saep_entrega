@@ -24,6 +24,6 @@ app.use('/relatorio', relatoriosRouter);
 app.use('/alertas', relatoriosRouter); // /alertas/revisoes
 
 // Sincronizar banco e iniciar servidor
-sequelize.sync().then(() => {
+sequelize.sync({ force: true }).then(() => {
   app.listen(3001, () => console.log('Backend rodando na porta 3001'));
 });

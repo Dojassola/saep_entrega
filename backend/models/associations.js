@@ -26,8 +26,9 @@ HistoricoMovimentacao.belongsTo(Peca);
 OrdemServico.belongsToMany(Peca, { through: OrdemServicoPeca });
 Peca.belongsToMany(OrdemServico, { through: OrdemServicoPeca });
 
-OrdemServico.belongsTo(Funcionario);
+// Ordem de serviço pertence a um funcionário
 Funcionario.hasMany(OrdemServico);
+OrdemServico.belongsTo(Funcionario);
 
 export {
   sequelize,
