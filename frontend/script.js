@@ -16,7 +16,6 @@ function mostrarSistema() {
   document.getElementById('mainBox').style.display = 'block';
 }
 
-// Login
 const formLogin = document.getElementById('formLogin');
 if (formLogin) {
   formLogin.onsubmit = async e => {
@@ -61,7 +60,6 @@ function carregarTudo() {
   carregarAlertas();
 }
 
-// Clientes
 async function carregarClientes() {
   const res = await fetch(api + '/clientes');
   const clientes = await res.json();
@@ -72,7 +70,6 @@ async function carregarClientes() {
     li.textContent = `${c.id} - ${c.nome} (${c.telefone})`;
     lista.appendChild(li);
   });
-  // Preencher selects
   const selectClienteVeiculo = document.getElementById('selectClienteVeiculo');
   const selectClienteOrdem = document.getElementById('selectClienteOrdem');
   const selectRelatorioCliente = document.getElementById('selectRelatorioCliente');
@@ -98,7 +95,6 @@ document.getElementById('formCliente').onsubmit = async e => {
   carregarClientes();
 };
 
-// Veículos
 async function carregarVeiculos() {
   const res = await fetch(api + '/veiculos');
   const veiculos = await res.json();
@@ -109,7 +105,6 @@ async function carregarVeiculos() {
     li.textContent = `${v.id} - ${v.placa} (${v.modelo}, ${v.ano}) - Cliente: ${v.Cliente ? v.Cliente.nome : ''}`;
     lista.appendChild(li);
   });
-  // Preencher select
   const selectVeiculoOrdem = document.getElementById('selectVeiculoOrdem');
   const selectRelatorioVeiculo = document.getElementById('selectRelatorioVeiculo');
   [selectVeiculoOrdem, selectRelatorioVeiculo].forEach(sel => {
@@ -139,7 +134,6 @@ document.getElementById('formVeiculo').onsubmit = async e => {
   carregarVeiculos();
 };
 
-// Peças
 async function carregarPecas() {
   const res = await fetch(api + '/pecas');
   const pecas = await res.json();
@@ -154,7 +148,6 @@ async function carregarPecas() {
     }
     lista.appendChild(li);
   });
-  // Preencher select
   const selectPecaEntrada = document.getElementById('selectPecaEntrada');
   selectPecaEntrada.innerHTML = '<option value="">Selecione</option>';
   pecas.forEach(p => {
@@ -180,7 +173,6 @@ document.getElementById('formPeca').onsubmit = async e => {
   carregarPecas();
 };
 
-// Funcionários
 async function carregarFuncionarios() {
   const res = await fetch(api + '/funcionarios');
   const funcionarios = await res.json();
@@ -193,7 +185,6 @@ async function carregarFuncionarios() {
       lista.appendChild(li);
     });
   }
-  // Preencher selects de funcionários
   const selectFuncionarioOrdem = document.getElementById('selectFuncionarioOrdem');
   if (selectFuncionarioOrdem) {
     selectFuncionarioOrdem.innerHTML = '<option value="">Selecione</option>';
@@ -217,7 +208,6 @@ document.getElementById('formFuncionario').onsubmit = async e => {
   carregarFuncionarios();
 };
 
-// Ordens de Serviço
 async function carregarOrdens() {
   const res = await fetch(api + '/ordens');
   const ordens = await res.json();
@@ -259,7 +249,6 @@ async function mostrarDetalheOrdem(ordem) {
       <button type="submit">Lançar Peça</button>
     </form>
     <ul id="listaPecasOrdem"></ul>`;
-  // Preencher peças
   const resPecas = await fetch(api + '/pecas');
   const pecas = await resPecas.json();
   const selectPecaLancamento = document.getElementById('selectPecaLancamento');
@@ -270,7 +259,6 @@ async function mostrarDetalheOrdem(ordem) {
     opt.textContent = p.nome;
     selectPecaLancamento.appendChild(opt);
   });
-  // Listar peças já lançadas
   if (ordem.Pecas) {
     const lista = document.getElementById('listaPecasOrdem');
     lista.innerHTML = '';
@@ -283,7 +271,6 @@ async function mostrarDetalheOrdem(ordem) {
   document.getElementById('formLancamentoPeca').onsubmit = async e => {
     e.preventDefault();
     const form = e.target;
-    // Usa o funcionário logado
     const funcionarioId = usuarioLogado ? usuarioLogado.id : null;
     const resp = await fetch(api + `/ordens/${ordem.id}/pecas`, {
       method: 'POST',
@@ -302,7 +289,6 @@ async function mostrarDetalheOrdem(ordem) {
   };
 }
 
-// Movimentação de Peças (Entrada)
 document.getElementById('formEntradaPeca').onsubmit = async e => {
   e.preventDefault();
   const form = e.target;
@@ -331,8 +317,6 @@ async function carregarHistorico() {
   });
 }
 
-// Relatórios
-
 document.getElementById('formRelatorioCliente').onsubmit = async e => {
   e.preventDefault();
   const form = e.target;
@@ -346,6 +330,7 @@ document.getElementById('formRelatorioCliente').onsubmit = async e => {
     lista.appendChild(li);
   });
 };
+
 document.getElementById('formRelatorioVeiculo').onsubmit = async e => {
   e.preventDefault();
   const form = e.target;
@@ -372,7 +357,6 @@ async function carregarAlertas() {
   });
 }
 
-// Inicialização
 document.addEventListener('DOMContentLoaded', () => {
   token = localStorage.getItem('token');
   const user = localStorage.getItem('usuario');
@@ -387,7 +371,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// Cadastro de funcionário na tela de login
 const showCadastroBtn = document.getElementById('showCadastroBtn');
 const formCadastroFuncionario = document.getElementById('formCadastroFuncionario');
 const cadastroMsg = document.getElementById('cadastroMsg');

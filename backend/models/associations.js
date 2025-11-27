@@ -7,7 +7,6 @@ import OrdemServico from './OrdemServico.js';
 import OrdemServicoPeca from './OrdemServicoPeca.js';
 import HistoricoMovimentacao from './HistoricoMovimentacao.js';
 
-// Relacionamentos
 Cliente.hasMany(Veiculo);
 Veiculo.belongsTo(Cliente);
 
@@ -26,7 +25,6 @@ HistoricoMovimentacao.belongsTo(Peca);
 OrdemServico.belongsToMany(Peca, { through: OrdemServicoPeca });
 Peca.belongsToMany(OrdemServico, { through: OrdemServicoPeca });
 
-// Ordem de serviço pertence a um funcionário
 Funcionario.hasMany(OrdemServico);
 OrdemServico.belongsTo(Funcionario);
 

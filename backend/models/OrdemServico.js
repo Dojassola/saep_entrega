@@ -3,12 +3,12 @@ import sequelize from './index.js';
 
 const OrdemServico = sequelize.define('OrdemServico', {
   descricao: DataTypes.STRING,
-  status: DataTypes.STRING, // aberta, finalizada
+  status: DataTypes.STRING,
   FuncionarioId: {
     type: DataTypes.INTEGER,
     references: {
-      model: 'Funcionarios', // Nome da tabela referenciada
-      key: 'id' // Chave da tabela referenciada
+      model: 'Funcionarios',
+      key: 'id'
     }
   }
 });
