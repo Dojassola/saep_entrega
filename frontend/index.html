@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oficina Web</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Oficina Web</h1>
+  <nav>
+    <button onclick="showSection('clientes')">Clientes</button>
+    <button onclick="showSection('veiculos')">Veículos</button>
+    <button onclick="showSection('pecas')">Peças</button>
+    <button onclick="showSection('ordens')">Ordens de Serviço</button>
+    <button onclick="showSection('estoque')">Estoque</button>
+    <button onclick="showSection('relatorios')">Relatórios</button>
+    <button onclick="showSection('funcionarios')">Funcionários</button>
+  </nav>
+  <section id="clientes" class="tela">
+    <h2>Clientes</h2>
+    <form id="formCliente">
+      <input name="nome" placeholder="Nome" required>
+      <input name="telefone" placeholder="Telefone" required>
+      <button type="submit">Cadastrar</button>
+    </form>
+    <ul id="listaClientes"></ul>
+  </section>
+  <section id="veiculos" class="tela" style="display:none">
+    <h2>Veículos</h2>
+    <form id="formVeiculo">
+      <input name="placa" placeholder="Placa" required>
+      <input name="modelo" placeholder="Modelo" required>
+      <input name="ano" placeholder="Ano" type="number" required>
+      <select name="ClienteId" id="selectClienteVeiculo" required></select>
+      <button type="submit">Cadastrar</button>
+    </form>
+    <ul id="listaVeiculos"></ul>
+  </section>
+  <section id="pecas" class="tela" style="display:none">
+    <h2>Peças</h2>
+    <form id="formPeca">
+      <input name="nome" placeholder="Nome" required>
+      <input name="estoque" placeholder="Estoque" type="number" required>
+      <input name="estoqueMinimo" placeholder="Estoque Mínimo" type="number" required>
+      <button type="submit">Cadastrar</button>
+    </form>
+    <ul id="listaPecas"></ul>
+  </section>
+  <section id="ordens" class="tela" style="display:none">
+    <h2>Ordens de Serviço</h2>
+    <form id="formOrdem">
+      <input name="descricao" placeholder="Descrição" required>
+      <select name="ClienteId" id="selectClienteOrdem" required></select>
+      <select name="VeiculoId" id="selectVeiculoOrdem" required></select>
+      <select name="FuncionarioId" id="selectFuncionarioOrdem" required></select>
+      <button type="submit">Abrir Ordem</button>
+    </form>
+    <ul id="listaOrdens"></ul>
+    <div id="ordemDetalhe"></div>
+  </section>
+  <section id="estoque" class="tela" style="display:none">
+    <h2>Movimentação de Peças</h2>
+    <form id="formEntradaPeca">
+      <select name="pecaId" id="selectPecaEntrada" required></select>
+      <input name="quantidade" placeholder="Quantidade" type="number" required>
+      <input name="funcionarioId" placeholder="ID Funcionário" type="number" required>
+      <button type="submit">Entrada</button>
+    </form>
+    <ul id="historicoEstoque"></ul>
+  </section>
+  <section id="relatorios" class="tela" style="display:none">
+    <h2>Relatórios</h2>
+    <form id="formRelatorioCliente">
+      <select name="clienteId" id="selectRelatorioCliente" required></select>
+      <button type="submit">Histórico por Cliente</button>
+    </form>
+    <form id="formRelatorioVeiculo">
+      <select name="veiculoId" id="selectRelatorioVeiculo" required></select>
+      <button type="submit">Histórico por Veículo</button>
+    </form>
+    <ul id="listaRelatorio"></ul>
+    <h3>Alertas de Revisão</h3>
+    <ul id="listaAlertas"></ul>
+  </section>
+  <section id="funcionarios" class="tela" style="display:none">
+    <h2>Funcionários</h2>
+    <form id="formFuncionario">
+      <input name="nome" placeholder="Nome" required>
+      <button type="submit">Cadastrar</button>
+    </form>
+    <ul id="listaFuncionarios"></ul>
+  </section>
+  <script src="script.js"></script>
+</body>
+</html>
